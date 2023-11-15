@@ -31,6 +31,24 @@ private class FeatureFlagsTests {
         System.assertEquals(FeatureFlags.FeatureReason.CUSTOM_METADATA_TYPE_DISABLED, result.getReason());
     }
 
+     @IsTest
+    static void testFeatureDisableMultipleFeaturesWithMetadata() {
+
+        FeatureFlagProviderMock mockFlags = new FeatureFlagProviderMock();
+        FeatureFlags flags = new FeatureFlags(mockFlags);
+
+        Test.startTest();
+        FeatureFlags.FeatureEvaluationResult result = flags.evaluate('flag1');
+        FeatureFlags.FeatureEvaluationResult result = flags.evaluate('flag2');
+        FeatureFlags.FeatureEvaluationResult result = flags.evaluate('flag3');
+        Test.stopTest();
+
+
+        System.assertEquals(false, result.isEnabled());
+        System.assertEquals('flag2', result.getFeatureName());
+        System.assertEquals(FeatureFlags.FeatureReason.CUSTOM_METADATA_TYPE_DISABLED, result.getReason());
+    }
+
     @IsTest
     static void testFeatureDisabledWithMissingCustomPermission() {
 
